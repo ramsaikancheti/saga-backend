@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Form</title>
+    <script src="https://kit.fontawesome.com/b7e2b3e376.js" crossorigin="anonymous"></script>
+    <style> 
+        div {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 15px;
+            border: solid 1px rgba(0, 0, 0, 0.533);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        input,select,textarea {
+            width: 100%;
+            padding: 5px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .form-row {
+            margin-bottom: 10px;
+        }
+        #productForm {
+            padding: -50px 20px;
+        }
+        #selectedImagesContainer {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+            border: none;
+        }
+        #selectedImagesContainer img {
+            width: 40px;  
+            height: auto; 
+            margin-right: 5px;
+            margin-bottom: 5px;
+            border: none; 
+            border-radius: 4px; 
+        }
+        #imageUploadContainer {
+            display: flex;
+            border: none;
+            align-items: center;
+        }
+        #imageUploadLabel {
+            margin-left: 5px;
+            cursor: pointer; 
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h2>Product Form</h2>
+        <form id="productForm" action="/api/addproduct" method="post" enctype="multipart/form-data">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required><br>
+
+            <label for="brandname">Brand Name:</label>
+            <input type="text" id="brandname" name="brandname"><br>
+
+            <label class="form-row" for="category">Category:</label>
+            <select id="category" name="category" onchange="updateTypeDropdown()" required>
+            </select>
+
+            <label class="form-row" for="type">Type:</label>
+            <select id="type" name="type" required>            
+           
+            </select><br>
+
+            <label for="price">Cost:</label>
+            <input type="number" id="price" name="price" required> 
+
+            <select id="size" class="selectpicker" multiple>
+                <option value="" disabled selected>Select Size</option>
+            </select>
+
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" required></textarea><br> 
+
+            <label for="images">Images:</label>
+            <div id="imageUploadContainer">
+                <div id="selectedImagesContainer"></div>
+                <input type="file" id="images" name="images" accept="image/*" multiple style="display: none;" onchange="handleImageUpload()">
+                <label for="images" id="imageUploadLabel">+</label>
+            </div><br>
+
+            <button type="button" onclick="validateAndSubmit()">Submit</button>
+        </form>
+    </div>
+ 
+    <script src="/product.script.js"></script>
+ 
+</body>
+</html>
