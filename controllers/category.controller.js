@@ -63,6 +63,7 @@ const getCategories = async (req, res) => {
         if (!category) {
             return res.status(404).json({ error: 'Category or Type not found' });
         }
+    
 
         if (req.params.categoryId && req.params.typesId) {
             const matchingType = category.types.find((type) => type.typesId === parseInt(req.params.typesId));

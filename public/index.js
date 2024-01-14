@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+    
 
     function loadAllOrders() {
         fetch('/orders/all')
