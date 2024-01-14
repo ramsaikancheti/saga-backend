@@ -26,9 +26,7 @@ const cartRoutes = require('./routes/cart.routes');
 const categoryRoutes = require('./routes/category.route');
 const PaymentController = require('./controllers/paymentcontroller');
 const addressRoutes = require('./routes/address.route');
- const orderRoutes = require('./routes/order.route');
-
- 
+const orderRoutes = require('./routes/order.route');
 
 app.use('/user', userRoutes);
 app.use('/login', userRoutes);
