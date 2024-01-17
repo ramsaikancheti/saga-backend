@@ -37,9 +37,15 @@ const registerUser = async (req, res) => {
         }
     } catch (error) {
         console.error('Error during user registration:', error.message);
-        res.status(500).json({ success: false, message: 'Internal Server Error' });
+
+        if (error.code === 11000 && error.keyPattern && error.keyPattern.email) {
+             res.status(400).json({ success: false, message: 'Email address is already in use.' });
+        } else {
+            res.status(500).json({ success: false, message: 'Internal Server Error' });
+        }
     }
 };
+
 
 const loginUser = async (req, res) => {
     const { identifier, password } = req.body;
@@ -71,10 +77,80 @@ const loginUser = async (req, res) => {
     }
 };
 
-router.post('/register', registerUser);
-router.post('/login', loginUser);
+
+
+const getAllUsers = async (req, res) => {
+    try {
+        const allUsers = await User.find();
+        res.status(200).json({ success: true, users: allUsers });
+    } catch (error) {
+        console.error('Error fetching all users:', error.message);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+};
 
 module.exports = {
     registerUser,
     loginUser,
+    getAllUsers,
+};
+
+
+const getUserById = async (req, res) => {
+    const userId = req.params.userId;
+
+    try {
+        const user = await User.findOne({ userId });
+        
+        if (user) {
+            res.status(200).json({ success: true, user });
+        } else {
+            res.status(404).json({ success: false, message: 'User not found' });
+        }
+    } catch (error) {
+        console.error('Error fetching user by userId:', error.message);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+};
+
+
+const getAllAdmins = async (req, res) => {
+    try {
+        const allAdmins = await Admin.find();
+        res.status(200).json({ success: true, admins: allAdmins });
+    } catch (error) {
+        console.error('Error fetching all admins:', error.message);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+};
+
+
+const getAdminById = async (req, res) => {
+    const adminId = req.params.adminId;
+
+    try {
+        const admin = await Admin.findOne({ adminId });
+        
+        if (admin) {
+            res.status(200).json({ success: true, admin });
+        } else {
+            res.status(404).json({ success: false, message: 'Admin not found' });
+        }
+    } catch (error) {
+        console.error('Error fetching admin by adminId:', error.message);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+};
+
+
+router.post('/register', registerUser);
+router.post('/login', loginUser);
+
+module.exports = {
+    getAllAdmins,
+    getAdminById,
+    registerUser,
+    loginUser,
+    getUserById,
+    getAllUsers,
 };

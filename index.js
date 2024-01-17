@@ -28,8 +28,12 @@ const PaymentController = require('./controllers/paymentcontroller');
 const addressRoutes = require('./routes/address.route');
 const orderRoutes = require('./routes/order.route');
 
-app.use('/user', userRoutes);
-app.use('/login', userRoutes);
+// app.use('/user', userRoutes);
+// app.use('/login', userRoutes);
+// app.use('/api', userRoutes);
+// app.use('/api', userRoutes);
+// app.use('/api', adminRoutes);
+app.use('/api', userRoutes);
 app.use('/', productRoutes);
 app.use('/api/banners', bannerRoutes);
 app.use('/', addressRoutes);
