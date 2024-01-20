@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Order = require('../models/order.model');
 const { Cart } = require('../models/cart.model');
-const User = require('../models/user.models');
+const { User } = require('../models/user.models');
 const { Address } = require('../models/address.model');
 const Product = require('../models/product.model');
 const Payment = require('../models/payment.Model');
@@ -17,6 +17,8 @@ async function placeOrder(req, res) {
         if (!userCart || userCart.products.length === 0) {
             return res.status(400).json({ success: false, message: 'User cart is empty. Add products to the cart before placing an order.' });
         }
+
+        // console.log('User Cart Products:', userCart.products);
 
         const shippingCost = calculateShippingCost(userCart.products);
         const totalAmount = calculateTotalAmount(userCart.products, discount) + shippingCost;
@@ -40,7 +42,9 @@ async function placeOrder(req, res) {
             return res.status(404).json({ success: false, message: 'Payment method not found for the given paymentId.' });
         }
 
-        const newOrder = new Order({
+         console.log('Products to be saved in the order:', userCart.products);
+
+         const newOrder = new Order({
             orderId,
             user: userDetails.toObject(),
             couponCode,
@@ -54,82 +58,73 @@ async function placeOrder(req, res) {
                 state: addressDetails.state,
                 pincode: addressDetails.pincode,
             },
-            products: userCart.products.map(product => ({
-                product: {
-                    productId: product.productId,
-                    name: product.name,
-                    brandname: product.brandname,
-                    description: product.description,
-                    price: product.price,
-                    category: {
-                        categoryId: product.category.categoryId,
-                        name: product.category.name,
-                        image: product.category.image,
-                    },
-                    type: product.type ? {
-                        typesId: product.type.typesId,
-                        name: product.type.name,
-                        image: product.type.image,
-                    } : null,
-                    sizes: product.sizes.map(size => ({
-                        sizeId: size.sizeId,
-                        name: size.name,
-                        description: size.description,
-                        symbol: size.symbol,
-                    })),
-                    images: product.images,
-                    quantity: product.quantity,
+            products: [{
+                name: "hello",
+                price: 200,
+                brandname: "levis",
+                category: {
+                    categoryId: Number,
+                    name: String,
+                    image: String,
                 },
-            })),
+            }],
         });
 
-        await newOrder.save();
+        // Iterate through userCart.products and add each product to the products array
+        // userCart.products.forEach((product) => {
+        //     console.log(product);
+        //     const productToAdd = {
+        //     // productId: product.productId,
+        //     name: product.name,
+        //     brandname: product.brandname,
+        //     price: product.price,
+        //     description: product.description
+        //     // Add other product details as needed
+        //     };
+        //     console.log(productToAdd);
+        //     newOrder.products.push(productToAdd);
+        //     // newOrder.products.push(productToAdd);
+        // });
+
+        console.log('Order to be saved:', newOrder);
+
+        await newOrder.save().catch((error) => {
+            console.error('Error saving order:', error);
+          });
 
         userCart.products = [];
         await userCart.save();
 
         res.json({ success: true, message: 'Order placed successfully!', orderId });
+
     } catch (error) {
         console.error('Error placing order:', error.message);
         res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
 }
 
- 
-
-
-function calculateTotalAmount(products, discount) {
-  const subtotal = products.reduce((total, product) => total + product.price * product.quantity, 0);
-  return subtotal - (subtotal * discount) / 100;
-}
-
-function calculateShippingCost(products) {
-  const fixedShippingCost = 50;
-  return fixedShippingCost;
-}
-
-function generateRandomOrderId() {
-  return uuidv4().substr(0, 6).toUpperCase();
-}
-
-function getPaymentMethodName(paymentMethodNumber) {
-  const paymentMethodMap = {
-    1: 'netbanking',
-    2: 'credit card',
-    3: 'debit card',
-    4: 'cash on delivery',
-  };
-  return paymentMethodMap[paymentMethodNumber] || 'unknown';
-}
-
-const getAllOrders = async (req, res) => {
-    try {
-        const orders = await Order.find();
-        res.json({ success: true, orders });
-    } catch (error) {
-        console.error('Error fetching orders:', error);
-        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    function calculateTotalAmount(products, discount) {
+    const subtotal = products.reduce((total, product) => total + product.price * product.quantity, 0);
+    return subtotal - (subtotal * discount) / 100;
     }
-};
+
+    function calculateShippingCost(products) {
+    const fixedShippingCost = 50;
+    return fixedShippingCost;
+    }
+
+    function generateRandomOrderId() {
+    return uuidv4().substr(0, 6).toUpperCase();
+    }
+
+    const getAllOrders = async (req, res) => {
+        try {
+            const orders = await Order.find();
+            res.json({ success: true, orders });
+        } catch (error) {
+            console.error('Error fetching orders:', error);
+            res.status(500).json({ success: false, message: 'Internal Server Error' });
+        }
+    };
 
 module.exports = { placeOrder, getAllOrders };

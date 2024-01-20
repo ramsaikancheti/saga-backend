@@ -112,7 +112,6 @@ const addToCart = async (req, res) => {
 };
 
 
-
 const getAllCarts = async (req, res) => {
     try {
         const carts = await Cart.find();
@@ -155,6 +154,16 @@ const getUserCart = async (req, res) => {
         res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
 };
+
+// const getAllCarts = async (req, res) => {
+//     try {
+//         const carts = await Cart.find();
+//         res.json({ success: true, carts });
+//     } catch (error) {
+//         console.error('Error fetching carts:', error);
+//         res.status(500).json({ success: false, message: 'Internal server error' });
+//     }
+// };
 
 module.exports = { addToCart, getAllCarts, getCartById, getUserCart };
 

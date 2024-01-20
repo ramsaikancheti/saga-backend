@@ -28,7 +28,4 @@ async function getNextUserId() {
     }
 }
 
-module.exports = {
-    User,
-    getNextUserId,
-};
+module.exports = { User, getNextUserId };

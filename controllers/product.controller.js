@@ -144,24 +144,7 @@ const getProducts = async (req, res) => {
         console.error('Error fetching all products:', error.message);
         res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
-};
-
-// const getProductById = async (req, res) => {
-//     const productId = req.params.productId;
-
-//     try {
-//         const product = await Product.findOne({ productId: productId });
-
-//         if (!product) {
-//             return res.status(404).json({ success: false, message: 'Product not found' });
-//         }
-
-//         res.json({ success: true, product });
-//     } catch (error) {
-//         console.error('Error fetching product by ID:', error.message);
-//         res.status(500).json({ success: false, message: 'Internal Server Error' });
-//     }
-// };
+}; 
 
 
 const getProductById = async (req, res) => {
@@ -184,10 +167,6 @@ const getProductById = async (req, res) => {
         res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
 };
-
-
-
-
 
 const getProductsByCategoryAndType = async (req, res) => {
     try {

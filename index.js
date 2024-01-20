@@ -9,7 +9,6 @@ const PORT = process.env.PORT || 3000;
 const mongoDBAtlasIP = 'mongodb+srv://ram:ram123456789@cluster0.7k8qjfa.mongodb.net/';
 mongoose.connect(`${mongoDBAtlasIP}ecomm` );
 
-
 const app = express();
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -28,11 +27,6 @@ const PaymentController = require('./controllers/paymentcontroller');
 const addressRoutes = require('./routes/address.route');
 const orderRoutes = require('./routes/order.route');
 
-// app.use('/user', userRoutes);
-// app.use('/login', userRoutes);
-// app.use('/api', userRoutes);
-// app.use('/api', userRoutes);
-// app.use('/api', adminRoutes);
 app.use('/api', userRoutes);
 app.use('/', productRoutes);
 app.use('/api/banners', bannerRoutes);

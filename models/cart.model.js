@@ -15,7 +15,3 @@ const findAndIncrementCartId = async () => {
 };
 
 module.exports = { Cart, findAndIncrementCartId };
-
-
-
- 

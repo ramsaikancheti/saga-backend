@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-    
 
     function loadAllOrders() {
         fetch('/orders/all')
@@ -63,14 +62,14 @@ function createOrderBox(order) {
 
     const orderInfo = document.createElement('div');
     orderInfo.className = 'order-info';
-
+    console.log(order);
     orderInfo.innerHTML = `
         <p>Order ID: ${order._id || 'N/A'}</p>
-        <p>Timestamp: ${(order.orderDetails && order.orderDetails.timestamp) || 'N/A'}</p>
+        <p>Timestamp: ${(order.orderDetails && order.orderDetails.timestamp !== undefined) ? order.orderDetails.timestamp : 'N/A'}</p>
         <p>User: ${getUserInfo(order.user) || 'N/A'}</p>
         <p>Address: ${getAddressInfo(order.address) || 'N/A'}</p>
         <p>Products: ${getProductInfo(order.products) || 'N/A'}</p>
-        <p>Payment: ${getPaymentInfo(order.payment) || 'N/A'}</p>
+        <p>Payment: ${getPaymentInfo(order.payment !== undefined ? order.payment : []) || 'N/A'}</p>
     `;
 
     orderBox.appendChild(orderInfo);
@@ -79,34 +78,42 @@ function createOrderBox(order) {
 }
 
 
-
-
 function getProductInfo(products) {
     if (!products || !Array.isArray(products) || products.length === 0) {
         return 'N/A';
     }
 
     const productInfoArray = products.map(product => {
-        const productDetails = [];
-         const detailsToDisplay = ['name', 'quantity', 'price', 'brandname'];
-
-        detailsToDisplay.forEach(key => {
-            let value = product[key];
-
-             if (key === 'images') {
-                value = value && value[0] || 'N/A';
-            } else if (key === 'sizes' && value && value[0]) {
-                value = value[0].name || 'N/A';
-            } else if (key === 'price' || key === 'quantity') {
-                value = value !== undefined ? value : 'N/A';
-            }
-            productDetails.push(`${key}: ${value}`);
-        });
-        return productDetails.join(', ');
+        return getProductDetails(product);
     });
+    console.log(products);
+
     return productInfoArray.join('<br>');
 }
 
+function getProductDetails(product) {
+    const productDetailsArray = [];
+
+    for (const key in product) {
+        if (product.hasOwnProperty(key)) {
+            const value = product[key];
+
+            if (Array.isArray(value)) {
+                 const arrayValues = value.join(', ');
+                productDetailsArray.push(`${key}: ${arrayValues}`);
+            } else if (typeof value === 'object') {
+                 const nestedDetails = getProductDetails(value);
+                productDetailsArray.push(`${key}: ${nestedDetails}`);
+            } else {
+                const formattedValue = value !== undefined ? value : 'N/A';
+                productDetailsArray.push(`${key}: ${formattedValue}`);
+            }
+        }
+        console.log(productDetailsArray)
+    }
+
+    return productDetailsArray.join('<br>');
+}
 
     function getUserInfo(user) {
         if (!user) {
@@ -127,14 +134,12 @@ function getProductInfo(products) {
         if (!address) {
             return 'N/A';
         }
-    
         const addressInfoArray = [];
         for (const key in address) {
             if (address.hasOwnProperty(key)) {
                 addressInfoArray.push(`${key}: ${address[key]}`);
             }
         }
-    
         return addressInfoArray.join(', ');
     }
     
@@ -154,6 +159,7 @@ function getProductInfo(products) {
         }
     }
  
+//products
 
     function loadAllProducts() {
         fetch('/api/products/')
@@ -244,39 +250,40 @@ function getProductInfo(products) {
     }
 
     function handleEditButtonClick(productId) {
-        console.log(`Edit button clicked for product ID: ${productId}`);
+    console.log(`Edit button clicked for product ID: ${productId}`);
 
-        const editModalId = `editProductModal_${productId}`;
-        const editModalContent = `
-            <div id="${editModalId}" class="modal">
-                <div class="modal-content">
-                    <span class="close" onclick="closeEditModal('${editModalId}')">&times;</span>
-                    <h2>Edit Product</h2>
-                    <form id="editProductForm_${productId}">
-                        <label for="editName_${productId}">Name:</label>
-                        <input type="text" id="editName_${productId}" name="editName" required><br>
+    const editModalId = `editProductModal_${productId}`;
+    const editModalContent = `
+        <div id="${editModalId}" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeEditModal('${editModalId}')">&times;</span>
+                <h2>Edit Product</h2>
+                <form id="editProductForm_${productId}">
+                    <label for="editName_${productId}">Name:</label>
+                    <input type="text" id="editName_${productId}" name="editName" required><br>
 
-                        <label for="editBrandName_${productId}">Brand Name:</label>
-                        <input type="text" id="editBrandName_${productId}" name="editBrandName"><br>
+                    <label for="editBrandName_${productId}">Brand Name:</label>
+                    <input type="text" id="editBrandName_${productId}" name="editBrandName"><br>
 
-                        <label for="editPrice_${productId}">Price:</label>
-                        <input type="number" id="editPrice_${productId}" name="editPrice" required><br>
+                    <label for="editPrice_${productId}">Price:</label>
+                    <input type="number" id="editPrice_${productId}" name="editPrice" required><br>
 
-                        <button type="button" onclick="validateAndSubmit(${productId}, true)">Update</button>
-                    </form>
-                </div>
+                    <button type="button" onclick="validateAndSubmit(${productId}, true)">Update</button>
+                </form>
             </div>
-        `;
+        </div>
+    `;
 
-        document.body.insertAdjacentHTML('beforeend', editModalContent);
+    document.body.insertAdjacentHTML('beforeend', editModalContent);
 
-        loadProductDetailsForEditInternal(productId);
+    loadProductDetailsForEditInternal(productId);
 
-        const closeEditButton = document.querySelector(`#${editModalId} .close`);
-        closeEditButton.addEventListener('click', () => closeEditModal(editModalId));
-    }
+    const updateButton = document.querySelector(`#${editModalId} form button`);
+    updateButton.addEventListener('click', () => submitEditForm(productId));
 
-
+    const closeEditButton = document.querySelector(`#${editModalId} .close`);
+    closeEditButton.addEventListener('click', () => closeEditModal(editModalId));
+}
 
     async function loadProductDetailsForEditInternal(productId) {
         try {
@@ -312,11 +319,13 @@ function getProductInfo(products) {
         }
     }
 
-    function validateAndSubmit(productId, isEdit) {
-        console.log("Validating and submitting...");
+function validateAndSubmit(productId, isEdit) {
+    console.log("Validating and submitting...");
 
-        const formId = isEdit ? `editProductForm_${productId}` : "productForm";
-        const form = document.getElementById(formId);
+    const formId = isEdit ? `editProductForm_${productId}` : "productForm";
+    const form = document.getElementById(formId);
+
+    if (form.checkValidity()) {
         const formData = new FormData(form);
 
         const editedName = formData.get('editName');
@@ -324,41 +333,55 @@ function getProductInfo(products) {
         const editedPrice = formData.get('editPrice');
 
         updateProductDetailsViaNavbar(productId, {
-        name: editedName,
-        brandname: editedBrandName,
-        price: editedPrice,
+            name: editedName,
+            brandname: editedBrandName,
+            price: editedPrice,
         });
 
         closeEditModal(`editProductModal_${productId}`);
+    } else {
+        console.error("Form validation failed. Please fill in all required fields.");
     }
+}
 
-    function submitEditForm(productId) {
-        const editedName = document.getElementById(`editName_${productId}`).value;
-        const editedBrandName = document.getElementById(`editBrandName_${productId}`).value;
-        const editedPrice = document.getElementById(`editPrice_${productId}`).value;
 
-        const updatedData = {
+function submitEditForm(productId) {
+    const editedName = document.getElementById(`editName_${productId}`).value;
+    const editedBrandName = document.getElementById(`editBrandName_${productId}`).value;
+    const editedPrice = document.getElementById(`editPrice_${productId}`).value;
+
+    const updatedData = {
         name: editedName,
         brandname: editedBrandName,
         price: editedPrice,
-        };
+    };
 
-        updateProductDetailsViaNavbar(productId, updatedData);
+    updateProductDetailsViaNavbar(productId, updatedData);
+}
 
-        closeEditModal(`editProductModal_${productId}`);
-    }
 
+   function updateProductDetailsViaNavbar(productId, updatedData) {
     fetch(`/api/products/edit/${productId}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-            name: editedName,
-            brandname: editedBrandName,
-            price: editedPrice,
-        }),
+        body: JSON.stringify(updatedData),
     })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Error updating product details: ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+             console.log('Product details updated successfully:', data);
+        })
+        .catch(error => {
+            console.error('Error updating product details:', error);
+        });
+}
+
 
     function handleDeleteButtonClick(productId) {
         console.log(`Delete button clicked for product ID: ${productId}`);
