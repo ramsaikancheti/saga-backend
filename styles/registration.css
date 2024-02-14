@@ -1,0 +1,95 @@
+body{
+    background-image: url('https://img.freepik.com/free-vector/dark-gradient-background-with-copy-space_53876-99548.jpg'); 
+    background-size: cover;
+    background-position: center;
+}
+
+.registration{
+    display: flex;
+    width: 76%;
+    height: 551px;
+    margin-top: 87px;
+    margin-left: 156px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.shoppix{
+    background-color: aquamarine;
+    width: 30%;
+}
+
+.container{
+    background-color: rgb(255, 255, 255);
+    width: 70%;
+    padding: 49px 17px 0px 10px;
+}
+
+.container h3{
+    margin-left: 29px;
+    margin-left: 285px;
+    FONT-FAMILY: emoji;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    max-width: 300px;
+    margin: 0 auto;
+} 
+
+label {
+    margin-bottom: 8px;
+}
+
+input {
+    margin-bottom: 0px;
+    padding: 8px;
+    font-size: 16px;
+}
+
+button {
+    background-color: rgb(135, 244, 207);
+    color: rgb(15, 14, 14);
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: aquamarine;
+}
+p{
+    text-align: center;
+}
+.error-message {
+    color: red;
+    margin-top: 5px;
+}
+.shoppix_content{
+     margin-left: 38px;
+     margin-top: 164px;
+ }
+.shoppix_content h3{
+    margin-left: 89px;
+ }
+.shoppix_content i{
+    font-size: 90px;    
+    margin-left: 83px;     
+}
+.shoppix_content p{
+    margin-left: -45px;
+}
+
+.registration img{
+    width: 119px;
+    margin-top: 44px;
+    margin-left: 20px;
+}
+
+.container p{
+    font-size: 12px;
+}
+
+#role{
+    display: none;
+}

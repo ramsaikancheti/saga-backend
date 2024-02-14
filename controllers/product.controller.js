@@ -19,13 +19,12 @@ const uploadMiddleware = multer({ storage: storage }).array('images', 3);
 
 const showProductForm = (req, res) => {
     try {
-         res.sendFile(path.join(__dirname, '../views/productform.ejs'));
+        res.render('productform.ejs'); 
     } catch (error) {
         console.error('Error showing product form:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
-
 
 const addProduct = async (req, res) => {
     try {
@@ -44,18 +43,22 @@ const addProduct = async (req, res) => {
 
             const images = req.files.map(file => "uploads/" + file.filename);
             const productId = await getNextProductId();
-             const sizesArray = JSON.parse(sizes);
+            const sizesArray = JSON.parse(sizes);
 
             const categoryDetails = await Category.findOne({ categoryId: Number(category) });
 
-            if (!categoryDetails) {
-                return res.status(404).json({ error: 'Category not found' });
+            if (!categoryDetails || categoryDetails.status === 0) {
+                return res.status(404).json({ error: 'Category not found or out of stock' });
             }
 
             const typeDetails = categoryDetails.types.find(typeObj => typeObj.typesId === Number(type));
 
             if (!typeDetails) {
-                return res.status(404).json({ error: 'Type not found within the specified category' });
+                return res.status(404).json({ error: 'Type not found in the category' });
+            }
+
+            if (typeDetails.status === 0) {
+                return res.status(404).json({ error: 'Type is out of stock' });
             }
 
             const categoryInfo = {
@@ -70,10 +73,12 @@ const addProduct = async (req, res) => {
                 image: typeDetails.image,
             };
 
-
             const sizesArrayAsNumbers = sizesArray.map(sizeId => {
                 const sizeInfo = typeDetails.sizes.find(size => size.sizeId === sizeId);
                 if (sizeInfo) {
+                    if (sizeInfo.status === 0) {
+                        return null; 
+                    }
                     return {
                         sizeId: sizeInfo.sizeId,
                         name: sizeInfo.name,
@@ -83,10 +88,10 @@ const addProduct = async (req, res) => {
                 } else {
                     return null;
                 }
-            });            
+            });
 
             if (sizesArrayAsNumbers.some(size => size === null)) {
-                return res.status(400).json({ error: 'Invalid sizeId provided in sizes array' });
+                return res.status(400).json({ error: 'One or more sizes are out of stock' });
             }
 
             const newProduct = new Product({
@@ -100,17 +105,17 @@ const addProduct = async (req, res) => {
                 sizes: sizesArrayAsNumbers,
                 images,
             });
-            await newProduct.save();
 
+            await newProduct.save();
             res.status(201).json({ message: 'Product added successfully', product: newProduct });
+
         });
     } catch (error) {
         console.error('Error adding product:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
-
-
+ 
 const getNextProductId = async () => {
     try {
         const highestProductId = await Product.findOne({}, { productId: 1 }).sort({ productId: -1 });
@@ -242,86 +247,4 @@ const updateProduct = async (req, res) => {
         res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
 };
-
 module.exports = { addProduct, getProductsByCategory, getProductsByCategoryAndType, sortProductsByCost, getProducts, getProductById, showProductForm, deleteProduct, updateProduct };
-
-
-
-
-
-// const addProduct = async (req, res) => {
-//     try {
-//         uploadMiddleware(req, res, async function (err) {
-//             if (err instanceof multer.MulterError) {
-//                 return res.status(400).json({ error: 'Multer error' });
-//             } else if (err) {
-//                 return res.status(500).json({ error: 'Internal Server Error' });
-//             }
-
-//             const { name, description, price, category, type, sizes, brandname } = req.body;
-
-//             if (!req.files || req.files.length < 2) {
-//                 return res.status(400).json({ error: 'At least 2 images must be uploaded.' });
-//             }
-
-//             const images = req.files.map(file => "uploads/" + file.filename);
-
-//             const productId = await getNextProductId();
-
-//             const sizesArray = JSON.parse(sizes);
-
-//             console.log('sizesArray:', sizesArray);
-
-//             const categoryDetails = await Category.findOne({ categoryId: Number(category) });
-
-//             if (!categoryDetails) {
-//                 return res.status(404).json({ error: 'Category not found' });
-//             }
-//             const typeDetails = categoryDetails.types.find(typeObj => typeObj.typesId === Number(type));
-//             if (!typeDetails) {
-//                 return res.status(404).json({ error: 'Type not found within the specified category' });
-//             }
-//             const categoryInfo = {
-//                 categoryId: categoryDetails.categoryId,
-//                 name: categoryDetails.name,
-//                 image: categoryDetails.image,
-//             };
-//             const typeInfo = {
-//                 typesId: typeDetails.typesId,
-//                 name: typeDetails.name,
-//                 image: typeDetails.image,
-//             };
-
-//             const sizesArrayWithDetails = sizesArray.map(sizeId => {
-//                 const sizeDetailsArray = categoryDetails.sizes || [];
-//                 const sizeDetails = sizeDetailsArray.find(size => size && size.sizeId === sizeId);
-//                 return sizeDetails ? {
-//                     sizeId: sizeDetails.sizeId,
-//                     name: sizeDetails.name,
-//                     description: sizeDetails.description,
-//                     symbol: sizeDetails.symbol
-//                 } : null;
-//             }).filter(Boolean);
-
-//             console.log('sizesArrayWithDetails:', sizesArrayWithDetails);
-//             const sizesToStore = sizesArrayWithDetails.length > 0 ? sizesArrayWithDetails : [];
-//             console.log('sizesToStore:', sizesToStore);
-//             const newProduct = new Product({
-//                 productId,
-//                 name,
-//                 brandname,
-//                 description,
-//                 price,
-//                 category: categoryInfo,
-//                 type: typeInfo,
-//                 sizes: sizesToStore,
-//                 images,
-//             });
-//             await newProduct.save();
-//             res.status(201).json({ message: 'Product added successfully', product: newProduct });
-//         });
-//     } catch (error) {
-//         console.error('Error adding product:', error);
-//         res.status(500).json({ error: 'Internal Server Error' });
-//     }
-// };

@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const orderSchema = new mongoose.Schema(
     {
         orderId: String,
+        status: { type: Number, default: 1 }, 
         user: {
             type: mongoose.Schema.Types.Mixed,
             ref: 'User',
@@ -12,6 +13,7 @@ const orderSchema = new mongoose.Schema(
         totalAmount: Number,
         payments: {
             paymentId: Number,
+            status: { type: Number, default: 1 }, 
             name: String,
             image: String,
         },
@@ -25,36 +27,14 @@ const orderSchema = new mongoose.Schema(
         },
         products: [
             {
-            productId: {
-                type: mongoose.Schema.Types.ObjectId,
+                type: mongoose.Schema.Types.Mixed,
                 ref: 'Product',
             },
-            name: String,
-            brandname: String,
-            description: String,
-            price: Number,
-            category: {
-                categoryId: Number,
-                name: String,
-                image: String,
-            },
-            type: {
-                typesId: Number,
-                name: String,
-                image: String,
-            },
-            sizes: [
-                {
-                sizeId: Number,
-                name: String,
-                description: String,
-                symbol: String,
-                },
-            ],
-                images: [String],
-                quantity: Number,
-            },
         ],
+        createdAt: {
+            type: Date,
+            default: Date.now,
+        },
     },
     {
         timestamps: {
@@ -63,6 +43,8 @@ const orderSchema = new mongoose.Schema(
         },
     }
 );
+
+orderSchema.index({ createdAt: 1 }); 
 
 const Order = mongoose.model('Order', orderSchema);
 

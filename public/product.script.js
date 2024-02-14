@@ -10,30 +10,31 @@ function handleImageUpload() {
         const imageElement = document.createElement("img");
         imageElement.src = URL.createObjectURL(file);
         imageElement.alt = file.name;
-        imageElement.style.maxWidth = "100px";
-        imageElement.style.marginRight = "5px"; 
-        imageElement.style.marginBottom = "5px"; 
+        imageElement.style.maxWidth = "50px";
+        imageElement.style.height = "50px";
+        imageElement.style.marginRight = "5px";
+        imageElement.style.marginBottom = "5px";
         selectedImagesContainer.appendChild(imageElement);
     }
 }
 
 function updateTypeDropdown() {
-        const selectedCategoryDropdown = document.getElementById("category");
-        const selectedCategory = JSON.parse(selectedCategoryDropdown.options[selectedCategoryDropdown.selectedIndex].getAttribute('data-category'));
-        const typeDropdown = document.getElementById("type");
-        typeDropdown.innerHTML = "<option value='' disabled selected>Select Type</option>";
-        if (selectedCategory && selectedCategory.types) {
-            selectedCategory.types.forEach(type => {
-                const option = document.createElement("option");
-                option.value = type.name;
-                option.text = type.name;
-                typeDropdown.add(option);
-            });
-        }
-         updateSizeDropdown();
+    const selectedCategoryDropdown = document.getElementById("category");
+    const selectedCategory = JSON.parse(selectedCategoryDropdown.options[selectedCategoryDropdown.selectedIndex].getAttribute('data-category'));
+    const typeDropdown = document.getElementById("type");
+    typeDropdown.innerHTML = "<option value='' disabled selected>Select Type</option>";
+    if (selectedCategory && selectedCategory.types) {
+        selectedCategory.types.forEach(type => {
+            const option = document.createElement("option");
+            option.value = type.name;
+            option.text = type.name;
+            typeDropdown.add(option);
+        });
+    }
+    updateSizeDropdown();
 }
 
-let selectedSizes = [];  
+let selectedSizes = [];
 function updateSizeDropdown() {
     const selectedCategoryDropdown = document.getElementById("category");
     const selectedTypeDropdown = document.getElementById("type");
@@ -43,12 +44,21 @@ function updateSizeDropdown() {
     const selectedType = selectedTypeDropdown.value;
 
     const selectedTypeObj = selectedCategory.types.find(type => type.name === selectedType);
+
     if (selectedTypeObj && selectedTypeObj.sizes) {
-    populateDropdown(sizeDropdown, selectedTypeObj.sizes.map(size => size.name), true);
+        sizeDropdown.innerHTML = ""; 
+
+        selectedTypeObj.sizes.forEach(size => {
+            const option = document.createElement("option");
+            option.value = size.name;
+            option.text = size.name;
+            sizeDropdown.add(option);
+        });
+ 
     } else {
-    console.warn("No size data found for the selected type.");
+        console.warn("No size data found for the selected type.");
     }
-}
+} 
 
 function fetchCategories() {
     fetch('/api/categories')
@@ -75,64 +85,65 @@ function fetchCategories() {
 document.getElementById("type").addEventListener("change", updateSizeDropdown);
 
 function populateDropdown(dropdown, values, multiple = false) {
-if (!Array.isArray(values)) {
-values = [values];
-}
-
-values.forEach(value => {
-const option = document.createElement("option");
-option.value = value;
-option.text = value;
-if (multiple) {
-    if (selectedSizes.includes(value)) {
-        option.selected = true;  
+    if (!Array.isArray(values)) {
+        values = [values];
     }
-    option.addEventListener('click', () => {
-        updateSelectedSizes(dropdown); 
-    });
-}
-dropdown.add(option);
-});
 
-if (multiple) {
-$(dropdown).selectpicker('refresh');  
-updateSelectedSizes(dropdown); 
-}
+    values.forEach(value => {
+        const option = document.createElement("option");
+        option.value = value;
+        option.text = value;
+        if (multiple) {
+            if (selectedSizes.includes(value)) {
+                option.selected = true;
+            }
+            option.addEventListener('click', () => {
+                updateSelectedSizes(dropdown);
+            });
+        }
+        dropdown.add(option);
+    });
+
+    if (multiple) {
+        $(dropdown).selectpicker('refresh');
+        updateSelectedSizes(dropdown);
+    }
 }
 
 function updateSelectedSizes(dropdown) {
-selectedSizes = Array.from(dropdown.selectedOptions, option => option.value);
+    selectedSizes = Array.from(dropdown.selectedOptions, option => option.value);
 }
 
 function validateAndSubmit() {
-const form = document.getElementById("productForm");
-const formData = new FormData(form);
+    console.log("Submit button clicked");
+    
+    const form = document.getElementById("productForm");
+    const formData = new FormData(form);
 
-const brandname = document.getElementById("brandname").value;
-if (brandname.trim() !== "") {
-formData.append("brandname", brandname);
-}
+    const brandname = document.getElementById("brandname").value;
+    if (brandname.trim() !== "") {
+        formData.append("brandname", brandname);
+    }
 
-const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-formData.append('_csrf', csrfToken);
+    console.log("Submitting form data:", formData);
 
-fetch('/api/addproduct', {
+     fetch('/api/addproduct', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'multipart/form-data', 
-        },
         body: formData,
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            console.log('Product added successfully:', data.message);
-        } else {
-            console.error('Error adding product:', data.message);
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
         }
+        return response.json();
     })
+    .then(data => {
+        console.log('Server response:', data);
+     })
     .catch(error => {
-        console.error('Error submitting the form:', error);
-        alert('An error occurred while submitting the form. Please try again.');
+        console.error('Error submitting form data:', error.message);
     });
 }
+
+
+

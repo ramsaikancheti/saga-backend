@@ -12,6 +12,8 @@ const registerUser = async (req, res) => {
         const defaultRole = 'user';
         const selectedRole = role || defaultRole;
 
+        const registrationDate = new Date();  
+
         if (selectedRole === 'user') {
             const nextUserId = await getNextUserId();
             const newUser = new User({
@@ -20,6 +22,7 @@ const registerUser = async (req, res) => {
                 email,
                 password,
                 phoneNumber,
+                registrationDate,  
             });
             await newUser.save();
             res.status(201).json({ success: true, message: 'User registration successful!' });
@@ -31,6 +34,7 @@ const registerUser = async (req, res) => {
                 email,
                 password,
                 phoneNumber,
+                registrationDate,  
             });
             await newAdmin.save();
             res.status(201).json({ success: true, message: 'Admin registration successful!' });
@@ -39,7 +43,7 @@ const registerUser = async (req, res) => {
         console.error('Error during user registration:', error.message);
 
         if (error.code === 11000 && error.keyPattern && error.keyPattern.email) {
-             res.status(400).json({ success: false, message: 'Email address is already in use.' });
+            res.status(400).json({ success: false, message: 'Email address is already in use.' });
         } else {
             res.status(500).json({ success: false, message: 'Internal Server Error' });
         }
@@ -61,23 +65,28 @@ const loginUser = async (req, res) => {
         let user;
 
         if (isEmail) {
-            user = await User.findOne({ email: identifier, password });
+             user = await User.findOne({ email: identifier, password });
         } else if (isPhoneNumber) {
-            user = await User.findOne({ phoneNumber: identifier, password });
+             user = await User.findOne({ phoneNumber: identifier, password });
+        }
+
+        if (!user) {
+             user = await Admin.findOne({ email: identifier, password });
         }
 
         if (user) {
-            res.status(200).send({ success: true, message: 'Login successful!' });
+            const userName = user.name;
+            const userRole = user instanceof Admin ? 'admin' : 'user';
+
+            res.status(200).json({ success: true, message: 'Login successful!', name: userName, role: userRole });
         } else {
-            res.status(401).send({ success: false, message: 'Login failed. Please check your credentials.' });
+            res.status(401).json({ success: false, message: 'Login failed. Please check your credentials.' });
         }
     } catch (error) {
         console.error('Error during login:', error.message);
         res.status(500).send('Internal Server Error');
     }
 };
-
-
 
 const getAllUsers = async (req, res) => {
     try {
@@ -87,12 +96,6 @@ const getAllUsers = async (req, res) => {
         console.error('Error fetching all users:', error.message);
         res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
-};
-
-module.exports = {
-    registerUser,
-    loginUser,
-    getAllUsers,
 };
 
 
@@ -111,8 +114,7 @@ const getUserById = async (req, res) => {
         console.error('Error fetching user by userId:', error.message);
         res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
-};
-
+}; 
 
 const getAllAdmins = async (req, res) => {
     try {
@@ -122,8 +124,7 @@ const getAllAdmins = async (req, res) => {
         console.error('Error fetching all admins:', error.message);
         res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
-};
-
+}; 
 
 const getAdminById = async (req, res) => {
     const adminId = req.params.adminId;
@@ -141,8 +142,7 @@ const getAdminById = async (req, res) => {
         res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
 };
-
-
+ 
 router.post('/register', registerUser);
 router.post('/login', loginUser);
 

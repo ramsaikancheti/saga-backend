@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Registration Page</title>
+     <script src="https://kit.fontawesome.com/b7e2b3e376.js" crossorigin="anonymous"></script>
+     
+<link rel="stylesheet" href="/styles/admin-registration.css"> 
+</head>
+<body>
+        <div id="dashboardContainer"></div> 
+
+            <div class="container">
+                <h3>REGISTRATION FORM</h3>
+                <form id="registrationForm" action="/api/register" method="POST" onsubmit="return validatePassword()">
+                    <label for="name"></label>
+                    <input type="text" id="name" placeholder="Name" name="name" required>
+                    <br>
+                    <label for="email"></label>
+                    <input type="email" id="email" placeholder="Email" name="email" required>
+                    <br>
+                    <label for="phoneNumber"></label>
+                    <input type="tel" id="phoneNumber" placeholder="Phone Number" name="phoneNumber" required>
+                    <br>
+                    <label for="password"></label>
+                    <input type="password" id="password" placeholder="Password" name="password" required>
+                    <span class="error-message" id="passwordError"></span>
+                    <br>
+                    <label for="role"></label>
+                    <select id="role" name="role" required>
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                    <br>
+                    <button type="submit">Register</button>
+                </form>
+                <!-- <p>Already have an account? <a href="/">Login here</a>.</p> -->
+            </div>
+ 
+
+        <script>
+            fetch('/shoppix-dashboard')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('dashboardContainer').innerHTML = data;
+                })
+                .catch(error => console.error('Error fetching dashboard:', error));
+        </script> 
+         <script src="/public/index.js"></script>
+    
+         <script src="/public/customer.js"></script>
+</body>
+</html>

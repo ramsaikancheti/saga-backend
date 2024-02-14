@@ -4,83 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <title>Registration Page</title>
-    <style>
-        form {
-            display: flex;
-            flex-direction: column;
-            max-width: 300px;
-            margin: 0 auto;
-        }
+     <script src="https://kit.fontawesome.com/b7e2b3e376.js" crossorigin="anonymous"></script>
 
-        .container {
-            text-align: center;
-            border: solid 1px black;
-            padding: 20px 40px;
-            width: 30%;
-            margin-left: 500px;
-            margin-top: 10%;
-        }
-
-        label {
-            margin-bottom: 8px;
-        }
-
-        input {
-            margin-bottom: 16px;
-            padding: 8px;
-            font-size: 16px;
-        }
-
-        button {
-            background-color: antiquewhite;
-            color: rgb(15, 14, 14);
-            padding: 10px;
-            border: none;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: aquamarine;
-        }
-
-        p {
-            text-align: center;
-        }
-
-        .error-message {
-            color: red;
-            margin-top: 5px;
-        }
-    </style>
+ <link rel="stylesheet" href="/styles/registration.css">
 </head>
 <body>
-    <div class="container">
-        <form id="registrationForm" action="/register" method="POST" onsubmit="return validatePassword()">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
-            <br>
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-            <br>
-            <label for="phoneNumber">Phone Number:</label>
-            <input type="tel" id="phoneNumber" name="phoneNumber" required>
-            <br>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-            <span class="error-message" id="passwordError"></span>
-            <br>
-            <label for="role">Role:</label>
-            <select id="role" name="role" required>
-                <option value="user">User</option>
-                <option value="admin">Admin</option>
-            </select>
-            <br>
-            <button type="submit">Register</button>
-        </form>
-        <p>Already have an account? <a href="/login">Login here</a>.</p>
-    </div>
+         <div class="registration">
+            <div class="shoppix">
+                <div class="shoppix2">
+                    <div class="shoppix_content">
+                        <i class="fa-brands fa-shopify" style="color: #ffffff;"></i>
+                        <h3>Shoppix</h3>
+                        <p>Where Trends Meet Savings.</p>
+                    </div>
+                </div>
+                <img src="https://affixtheme.com/html/xmee/demo/img/figure/bg34-1.png" alt="">
+            </div>
 
-    <script src="registration.script.js"></script>
-   
+            <div class="container">
+                <h3>REGISTRATION FORM</h3>
+                <form id="registrationForm" action="/api/register" method="POST" onsubmit="return validatePassword()">
+                    <label for="name"></label>
+                    <input type="text" id="name" placeholder="Name" name="name" required>
+                    <br>
+                    <label for="email"></label>
+                    <input type="email" id="email" placeholder="Email" name="email" required>
+                    <br>
+                    <label for="phoneNumber"></label>
+                    <input type="tel" id="phoneNumber" placeholder="Phone Number" name="phoneNumber" required>
+                    <br>
+                    <label for="password"></label>
+                    <input type="password" id="password" placeholder="Password" name="password" required>
+                    <span class="error-message" id="passwordError"></span>
+                    <br>
+                    <label for="role"></label>
+                    <select id="role" name="role" required>
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                    <br>
+                    <button type="submit">Register</button>
+                </form>
+                <p>Already have an account? <a href="/">Login here</a>.</p>
+            </div>
+        </div>  
+
+
+        
 </body>
 </html>

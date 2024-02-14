@@ -1,0 +1,137 @@
+.invoice{
+    display: flex;
+    gap: 412px;
+    margin-left: 50px;
+} 
+
+.con{
+    margin-left: 100px;
+}
+
+.order-main{
+    display: flex;
+    width: 81%;
+    gap: 23px;
+    margin-left: 278px;
+    margin-top: 119px;
+} 
+
+#orderDetailsContainer{
+    text-align: start;
+    width: 70%;
+    height: 395px;
+    padding: 20px;
+    border-radius: 5px;
+    border-top: 3px solid rgb(52, 91, 230);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+} 
+
+.order_heading h3{
+    font-size: 26px;
+    font-family: emoji;
+}
+
+table {
+    border-collapse: collapse;
+    border: none;
+    width: 100%;
+}
+th, td {
+    border: none; 
+    padding: 8px;
+    text-align: left;
+}
+th {
+    background-color: #f2f2f2;
+} 
+
+.table-inner{
+    background-color: rgb(255, 255, 255);
+    width: 55%;
+    margin-top: 107px;
+    display: flex;
+    float: right;
+}
+
+.table-inner span{
+    padding: 4px;
+}
+
+.payment-status-dropdown, .action-dropdown{
+    width: 123px;
+    height: 25px;
+} 
+
+.save{
+    width: 27%;
+    gap: 20px;
+    margin-top: 164px;
+    margin-left: 653px;
+}
+
+.button{
+    display: none;
+}
+
+.one{
+    background-color: rgb(70 129 208);
+    color: white;
+    padding: 8px 10px;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+#paymentStatusDropdown{
+    width: 103px;
+    height: 25px;
+}
+
+.one:hover{
+    background-color: rgb(16, 106, 223);
+}
+
+#statusContainer{
+    padding: 14px 106px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+    
+}
+
+#statusContainer h4, p{
+    margin-left: -67px;
+}
+
+#paymentContainer{
+    padding: 14px 106px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+}
+
+#paymentContainer h4, p{
+    margin-left: -67px;
+}
+
+#address{
+    padding: 14px 106px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+#address h4, p{
+    margin-left: -67px;
+} 
+
+#orderDetailsContainer p {
+    margin-left: 0px;
+}
+
+.email{
+    display: flex;
+    gap: 426px;
+    margin-left: 53px;
+}
+
+.email .two{
+    margin-left: 30px;
+}
+

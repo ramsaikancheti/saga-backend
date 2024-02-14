@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(express.static('public'));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true })); 
 
 const userRoutes = require('./routes/user.route');
 const productRoutes = require('./routes/products.route');
@@ -34,26 +34,71 @@ app.use('/', addressRoutes);
 app.use('/', PaymentController);
 app.use('/',  cartRoutes);
 app.use('/', categoryRoutes);
-app.use('/orders', orderRoutes);
+app.use('/orders', orderRoutes); 
 app.use('/api/products', productRoutes);
 app.use('/api', productRoutes);
- 
-app.get('/', (req, res) => {
-    res.render('index');
-}); 
 
-app.get('/product', (req, res) => {
-    res.render('productform');
-}); 
+app.use('/styles', express.static(path.join(__dirname, 'styles'), {
+    setHeaders: (res, path) => {
+      if (path.endsWith('.css')) {
+        res.setHeader('Content-Type', 'text/css');
+      }
+    },
+}));
 
-app.get('/login', (req,  res) => {
+app.use(express.static('public'));
+app.use('/styles', express.static(path.join(__dirname, 'styles'))); 
+app.use('/public', express.static(path.join(__dirname, 'public'))); 
+app.use('/images', express.static(path.join(__dirname, 'images')));
+
+app.get('/', (req,  res) => {
     res.render('login');
-}); 
+});
 
 app.get('/register', (req, res) => {
     res.render('registration');
+});
+
+app.get('/shoppix', (req,  res) => {
+    res.render('shoppix');
+});
+
+app.get('/shoppix-dashboard', (req, res) => {
+    res.render('index');
 }); 
 
+app.get('/dashboard', (req,  res) => {
+    res.render('dashboard');
+});
+
+app.get('/productform', (req, res) => {
+    res.render('productform');
+}); 
+
+app.get('/category', (req, res) => {
+    res.render('category');
+});
+
+app.get('/orders', (req, res) => {
+    res.render('orders');
+});
+
+app.get('/product', (req, res) => {
+    res.render('products');
+});
+
+app.get('/customers', (req, res) => {
+    res.render('customers');
+});
+
+app.get('/order', (req, res) => {
+    res.render('order');
+});
+
+app.get('/admin', (req, res) => {
+    res.render('admin-registration');
+});
+ 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });

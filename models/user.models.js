@@ -6,6 +6,28 @@ const userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     phoneNumber: { type: String, required: true },
+    registrationDate: {
+        type: Date,
+        default: Date.now,
+        get: function () {
+             const date = new Date(this._doc.registrationDate);
+            const optionsDate = {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+            };
+            const optionsTime = {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true,
+            };
+
+            const formattedDate = date.toLocaleString('en-IN', optionsDate);
+            const formattedTime = date.toLocaleString('en-IN', optionsTime);
+
+            return `${formattedDate} ${formattedTime}`;
+        },
+    },
 });
 
 const User = mongoose.model('User', userSchema);

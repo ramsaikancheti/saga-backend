@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>orders</title>
+    <script src="https://kit.fontawesome.com/b7e2b3e376.js" crossorigin="anonymous"></script>
+     
+    <link rel="stylesheet" href="/styles/orders.css">
+</head>
+<body>
+
+    <div id="dashboardContainer"></div>
+
+    <div id="mainContent"> 
+        <div id="ordersTableContainer">
+        
+        </div>
+    </div>
+
+    <script>
+        fetch('/shoppix-dashboard')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('dashboardContainer').innerHTML = data;
+            })
+            .catch(error => console.error('Error fetching dashboard:', error));
+    </script>
+    <script src="/public/index.js"></script>
+
+  <script src="/public/orders.js"></script>
+</body>
+</html>

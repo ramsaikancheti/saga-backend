@@ -53,63 +53,59 @@ const addToCart = async (req, res) => {
                 cartId: nextCartId,
                 products: [cartProduct],
             });
+
+             await cart.save();
         } else {
-            const existingProductIndex = cart.products.findIndex(product => product.productId === productDetails.productId);
-
-            if (existingProductIndex !== -1) {
-                cart.products[existingProductIndex].quantity += quantity;
-            } else {
-                const newCartProduct = {
-                    productId: productDetails.productId,
-                    name: productDetails.name,
-                    brandname: productDetails.brandname,
-                    description: productDetails.description,
-                    price: productDetails.price,
-                    category: {
-                        categoryId: productDetails.category.categoryId,
-                        name: productDetails.category.name,
-                        image: productDetails.category.image,
+             await Cart.updateOne(
+                { userId },
+                {
+                    $addToSet: {
+                        products: {
+                            productId: productDetails.productId,
+                            name: productDetails.name,
+                            brandname: productDetails.brandname,
+                            description: productDetails.description,
+                            price: productDetails.price,
+                            category: {
+                                categoryId: productDetails.category.categoryId,
+                                name: productDetails.category.name,
+                                image: productDetails.category.image,
+                            },
+                            type: productDetails.type ? {
+                                typesId: productDetails.type.typesId,
+                                name: productDetails.type.name,
+                                image: productDetails.type.image,
+                            } : null,
+                            sizes: productDetails.sizes.map(size => ({
+                                sizeId: size.sizeId,
+                                name: size.name,
+                                description: size.description,
+                                symbol: size.symbol,
+                            })),
+                            images: productDetails.images,
+                            quantity: Number(quantity),
+                        },
                     },
-                    type: productDetails.type ? {
-                        typesId: productDetails.type.typesId,
-                        name: productDetails.type.name,
-                        image: productDetails.type.image,
-                    } : null,
-                    sizes: productDetails.sizes.map(size => ({
-                        sizeId: size.sizeId,
-                        name: size.name,
-                        description: size.description,
-                        symbol: size.symbol,
-                    })),
-                    images: productDetails.images,
-                    quantity: Number(quantity),
-                };
-
-                cart.products.push(newCartProduct);
-            }
+                }
+            );
         }
 
-        const validationError = cart.validateSync();
-
-        if (validationError) {
-            console.error('Cart validation error:', validationError);
-            return res.status(400).json({ success: false, message: 'Cart validation failed', errors: validationError.errors });
-        }
-
-        await cart.save();
+         const updatedCart = await Cart.findOne({ userId });
 
         res.json({
             success: true,
             message: 'Product added to cart successfully',
-            cartId: cart.cartId,
-            userId: cart.userId,
-            products: cart.products,
+            cartId: updatedCart.cartId,
+            userId: updatedCart.userId,
+            products: updatedCart.products,
         });
     } catch (error) {
         console.error('Error adding product to cart:', error);
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 };
+
+
 
 
 const getAllCarts = async (req, res) => {
