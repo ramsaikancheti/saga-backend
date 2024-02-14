@@ -10,12 +10,14 @@
 </head>
 <body>
     <div id="dashboardContainer"></div>
-
-    <div class="create-customer">
-        <a href="/admin">Create Customer</a>
-    </div> 
-
-    <div id="usersTableContainer"></div>
+     <div class="customer-title"> <h4>Customers</h4> </div>
+    <div class="customers-table">
+        <div class="create-customer">
+            <a href="/admin">Create Customer</a>
+        </div> 
+    
+        <div id="usersTableContainer"></div>
+    </div>
 
     <script>
         fetch('/shoppix-dashboard')

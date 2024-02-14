@@ -3,9 +3,27 @@ body {
     margin: 20px;
 }
 
+.customer-title{
+    margin-top: 102px;
+    margin-left: 280px;
+}
+
+.customer-title h4{
+    font-size: 16px;
+    font-family: revert-layer;
+}
+
+.customers-table{
+    width: 80%;
+    height: auto;
+    margin-top: 21px;
+    margin-left: 280px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
 .create-customer{
     background-color: rgb(97, 145, 209);
-    margin-top: 99px;
+    margin-top: 52px;
     margin-bottom: 35px;
     float: inline-end;
     margin-right: 40px;
@@ -22,11 +40,10 @@ body {
     background-color: rgb(25, 115, 233);
 }
 table {
-    width: 79%;
-    margin-left: 286px;
+    width: 97%;
+    margin-left: 19px;
     border-collapse: collapse;
     margin-top: 100px; 
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 th, td {
     padding: 8px;

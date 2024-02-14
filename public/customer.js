@@ -15,13 +15,9 @@ async function fetchAndDisplayUsersTable() {
         const table = document.createElement('table');
         table.classList.add('users-table');
 
-        const caption = document.createElement('caption');
-        caption.textContent = 'Users';
-        table.appendChild(caption);
-
         const thead = document.createElement('thead');
         const headerRow = document.createElement('tr');
-        const headings = ['User ID', 'User Name', 'User Email', 'Total Orders', 'Edit'];
+        const headings = ['User ID', 'User Name', 'User Email', 'Total Orders', 'Action'];
 
         headings.forEach(headingText => {
             const th = document.createElement('th');
