@@ -43,7 +43,7 @@ table {
     width: 97%;
     margin-left: 19px;
     border-collapse: collapse;
-    margin-top: 100px; 
+    margin-top: 31px;
 }
 th, td {
     padding: 8px;
@@ -75,4 +75,202 @@ button {
 .fa-edit{
     font-size: 13px;
     cursor: pointer;
+}
+
+.customer-title2{
+    margin-top: 55px;
+    margin-bottom: -70px;
+    margin-left: 288px;
+
+}
+
+.admin-table-container{
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    margin-left: 285px;
+}
+
+#admintablecontainer{
+    width: 100%;
+    margin-left: 2px;
+    padding: 1px 0px;
+    margin-top: 100px;
+}
+
+
+
+
+
+
+
+
+.modal {
+    display: none;
+    width: 23%;
+    height: auto;
+    margin-left: 877px;
+    margin-top: -443px;
+    position: absolute;
+    border-radius: 10px;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px;
+}
+
+#confirmDelete,
+#cancelDelete {
+    padding: 10px 38px;
+    margin: 10px;
+    cursor: pointer;
+    background-color: #d4443f;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+}
+
+#cancelDelete {
+    background-color: #51b955;
+}
+
+#cancelDelete:hover {
+    background-color: #25ce2b;
+}
+
+#confirmDelete:hover{
+    background-color: #eb211a;
+}
+
+.fas.fa-trash-alt {
+    cursor: pointer;
+    color: #d9534f;
+    margin-right: 10px;
+}
+
+
+.modal2 {
+    width: 23%;
+    height: auto;
+    display: none;
+    position: fixed;
+    margin-left: 877px;
+    margin-top: -716px;
+    border-radius: 10px;
+    padding-left: 59px;
+    padding-bottom: 16px;
+    background-color: #fff;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+ 
+
+.modal2 input{
+    width: 261px;
+    line-height: 26px;
+    margin-bottom: 16px;
+}
+
+#confirmEdit{
+    margin-left: 3px;
+    width: 80px;
+    padding: 10px;
+    background-color: #3fad42;
+    border: none;
+    border-radius: 3px;
+}
+
+#confirmEdit:hover{
+    background-color: #25ce2b;
+}
+
+#cancelEdit{
+    background-color: rgb(56, 182, 232);
+    border: none;
+    width: 80px;
+    padding: 10px;
+    border-radius: 3px;
+}
+
+#cancelEdit:hover{
+    background-color: rgb(104, 196, 233);
+}
+
+.buttons{
+    display: flex;
+    gap: 10px;
+}
+
+
+
+.modal22 {
+    width: 23%;
+    height: auto;
+    display: none;
+    position: fixed;
+    margin-left: 877px;
+    margin-top: -716px;
+    border-radius: 10px;
+    padding-left: 27px;
+    padding-right: 19px;
+    background-color: #fff;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.modal22 input{
+    width: 261px;
+    line-height: 26px;
+    margin-bottom: 16px;
+}
+.model-content{
+    background-color: #fff;
+    padding: 20px 61px;
+    text-align: center;
+    border-radius: 10px;
+}
+.modal22 h4{
+    margin-left: 38px;
+    margin-bottom: 10px;
+} 
+.edit-msg-modal{
+    display: none;
+    position: absolute;
+    margin-left: 722px;
+    border-radius: 32px;
+    padding: 10px 34px;
+    margin-top: -981px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(66, 82, 107, 0.1);
+} 
+
+#confirmedit{
+    margin-left: 20px;
+    width: 80px;
+    padding: 10px;
+    background-color: #3fad42;
+    border: none;
+    border-radius: 3px;
+}
+
+#confirmedit:hover{
+    background-color: #25ce2b;
+}
+
+#canceledit{
+    background-color: rgb(56, 182, 232);
+    border: none;
+    width: 80px;
+    padding: 10px;
+
+    border-radius: 3px;
+}
+
+#canceledit:hover{
+    background-color: rgb(104, 196, 233);
 }

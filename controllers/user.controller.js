@@ -146,6 +146,86 @@ const getAdminById = async (req, res) => {
 router.post('/register', registerUser);
 router.post('/login', loginUser);
 
+const deleteUserById = async (req, res) => {
+    const userId = req.params.userId;
+
+    try {
+        const deletedUser = await User.findOneAndDelete({ userId });
+
+        if (deletedUser) {
+            res.status(200).json({ success: true, message: 'User deleted successfully', deletedUser });
+        } else {
+            res.status(404).json({ success: false, message: 'User not found' });
+        }
+    } catch (error) {
+        console.error('Error deleting user by userId:', error.message);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+};
+
+
+const updateUserById = async (req, res) => {
+    const userId = req.params.userId;
+    const { name, email, password, phoneNumber } = req.body;
+
+    try {
+        const updatedUser = await User.findOneAndUpdate(
+            { userId: userId },
+            { $set: { name, email, password, phoneNumber } },
+            { new: true }
+        );
+
+        if (updatedUser) {
+            res.status(200).json({ success: true, message: 'User updated successfully', updatedUser });
+        } else {
+            res.status(404).json({ success: false, message: 'User not found' });
+        }
+    } catch (error) {
+        console.error('Error updating user by userId:', error.message);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+};
+
+
+const deleteAdminById = async (req, res) => {
+    const adminId = req.params.adminId;
+
+    try {
+        const deletedAdmin = await Admin.findOneAndDelete({ adminId });
+
+        if (deletedAdmin) {
+            res.status(200).json({ success: true, message: 'Admin deleted successfully', deletedAdmin });
+        } else {
+            res.status(404).json({ success: false, message: 'Admin not found' });
+        }
+    } catch (error) {
+        console.error('Error deleting admin by adminId:', error.message);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+};
+
+const updateAdminById = async (req, res) => {
+    const adminId = req.params.adminId;
+    const { name, email, password, phoneNumber } = req.body;
+
+    try {
+        const updatedAdmin = await Admin.findOneAndUpdate(
+            { adminId: adminId },
+            { $set: { name, email, password, phoneNumber } },
+            { new: true }
+        );
+
+        if (updatedAdmin) {
+            res.status(200).json({ success: true, message: 'Admin updated successfully', updatedAdmin });
+        } else {
+            res.status(404).json({ success: false, message: 'Admin not found' });
+        }
+    } catch (error) {
+        console.error('Error updating admin by adminId:', error.message);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+};
+
 module.exports = {
     getAllAdmins,
     getAdminById,
@@ -153,4 +233,8 @@ module.exports = {
     loginUser,
     getUserById,
     getAllUsers,
+    deleteUserById,
+    updateUserById,
+    deleteAdminById,
+    updateAdminById,
 };

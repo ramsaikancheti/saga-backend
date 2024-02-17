@@ -164,3 +164,61 @@
     background-color: rgb(0, 238, 255);
     color: white;
 }
+
+
+
+
+
+
+
+.modals {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.modal-contents {
+    text-align: center;
+}
+
+.modals h2 {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+}
+
+.modals form {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.modals label {
+    font-weight: bold;
+}
+
+.modals input {
+    padding: 8px;
+    width: 100%;
+}
+
+.modals button {
+    padding: 10px 20px;
+    cursor: pointer;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+}
+
+.modals button:hover {
+    background-color: #2980b9;
+}
+
+
+

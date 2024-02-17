@@ -14,11 +14,25 @@ async function fetchOrderDetails(orderId) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const orderStatusDropdown = document.getElementById('orderActionDropdown');
-    const orderStatusSpan = document.getElementById('orderStatus');
+    setupEventListeners();
+});
 
-    orderStatusDropdown.addEventListener('change', async () => {
+function setupEventListeners() {
+    const orderStatusDropdown = document.getElementById('orderActionDropdown');
+    const paymentStatusDropdown = document.getElementById('paymentStatusDropdown');
+    const saveChangesButton = document.querySelector('.save .button');
+
+    const orderStatusSpan = document.getElementById('orderStatus');
+    const paymentStatusSpan = document.getElementById('paymentStatus');
+
+    orderStatusDropdown.addEventListener('change', () => {
+        orderStatusSpan.textContent = getStatusName(orderStatusDropdown.value);
+    });
+
+    saveChangesButton.addEventListener('click', async () => {
         const newStatus = orderStatusDropdown.value;
+        const newPaymentStatus = paymentStatusDropdown.value;
+
         const urlParams = new URLSearchParams(window.location.search);
         const orderId = urlParams.get('orderId');
 
@@ -26,12 +40,46 @@ document.addEventListener('DOMContentLoaded', () => {
             await updateOrderStatus(orderId, newStatus);
             console.log('Order status updated successfully');
 
-             orderStatusSpan.textContent = getStatusName(newStatus);
+            if (newPaymentStatus !== undefined) {
+                await updatePaymentStatus(orderId, newPaymentStatus);
+                console.log('Payment status updated successfully');
+
+                paymentStatusSpan.textContent = getPaymentStatusName(newPaymentStatus);
+
+                showSuccessModal();
+            }
+
         } catch (updateError) {
-            console.error('Error updating order status:', updateError);
+            console.error('Error updating status:', updateError);
         }
     });
-});
+
+     let newPaymentStatus;
+    paymentStatusDropdown.addEventListener('change', () => {
+        newPaymentStatus = paymentStatusDropdown.value;
+    });
+}
+    
+
+
+function showSuccessModal() {
+    const successModal = document.getElementById('successModal');
+    successModal.style.display = 'block';
+
+    setTimeout(() => {
+        closeModal();
+    }, 1000);
+}
+
+function closeModal() {
+    const successModal = document.getElementById('successModal');
+    successModal.style.display = 'none';
+}
+function getPaymentStatusName(status) {
+    return status === '1' ? 'Paid' : 'Pending';
+}
+
+
 
  function getStatusName(status) {
     switch (status) {
@@ -47,7 +95,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return 'Unknown Status';
     }
 }
-
 
 async function updateOrderStatus(orderId, newStatus) {
     try {
@@ -88,31 +135,38 @@ document.addEventListener('DOMContentLoaded', async () => {
     const orderId = urlParams.get('orderId');
 
     try {
-         const orderData = await fetchOrderDetails(orderId);
+        const orderData = await fetchOrderDetails(orderId);
         displayOrderDetails(orderData);
 
-         paymentStatusDropdown.value = orderData.order.payments.status.toString();
+         let initialChangeEvent = true;
 
         paymentStatusDropdown.addEventListener('change', async () => {
+            if (initialChangeEvent) {
+                 initialChangeEvent = false;
+                return;
+            }
+
             const newPaymentStatus = paymentStatusDropdown.value;
 
             try {
-                 await updatePaymentStatus(orderId, newPaymentStatus);
+                await updatePaymentStatus(orderId, newPaymentStatus);
                 console.log('Payment status updated successfully');
 
-                 const updatedOrderData = await fetchOrderDetails(orderId);
-
-                 displayOrderDetails(updatedOrderData);
+                const updatedOrderData = await fetchOrderDetails(orderId);
+                displayOrderDetails(updatedOrderData);
 
                  paymentStatusDropdown.value = updatedOrderData.order.payments.status.toString();
             } catch (updateError) {
                 console.error('Error updating payment status:', updateError);
             }
         });
+
+         paymentStatusDropdown.value = orderData.order.payments.status.toString();
     } catch (error) {
         console.error('Error loading order details:', error);
     }
-}); 
+});
+ 
 
 
 function updateTableRow(orderId, updatedOrderData) {
@@ -142,7 +196,7 @@ function updateTableRow(orderId, updatedOrderData) {
         console.error('Error updating payment status:', updateError);
         throw updateError;
     }
-} 
+}
 
 
 function displayOrderDetails(orderData) {
@@ -188,7 +242,6 @@ function displayOrderDetails(orderData) {
         orderStatusSpan.textContent = 'Unknown Status';
         break;
     }
-    
 
     const paymentId = document.getElementById('paymentId');
     const payment = document.getElementById('transaction');
@@ -233,6 +286,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });  
 
 
+
 document.addEventListener('DOMContentLoaded', () => {
     const printInvoiceButton = document.getElementById('print-invoice');
     printInvoiceButton.addEventListener('click', () => {
@@ -242,7 +296,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function downloadInvoice() {
     const orderDetailsContainer = document.getElementById('orderDetailsContainer');
-
     try {
         const urlParams = new URLSearchParams(window.location.search);
         const orderId = urlParams.get('orderId');
