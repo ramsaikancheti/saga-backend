@@ -18,6 +18,18 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); 
 
+
+
+
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*'); 
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+});
+
+
+
 const userRoutes = require('./routes/user.route');
 const productRoutes = require('./routes/products.route');
 const bannerRoutes = require('./routes/banner.route');
@@ -50,6 +62,7 @@ app.use(express.static('public'));
 app.use('/styles', express.static(path.join(__dirname, 'styles'))); 
 app.use('/public', express.static(path.join(__dirname, 'public'))); 
 app.use('/images', express.static(path.join(__dirname, 'images')));
+
 
 app.get('/', (req,  res) => {
     res.render('login');
