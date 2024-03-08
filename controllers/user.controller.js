@@ -6,13 +6,17 @@ const router = express.Router();
 
 
 const registerUser = async (req, res) => {
-    const { name, email, password, role, phoneNumber } = req.body;
+    const { name, email, password, confirmPassword, role, phoneNumber } = req.body;
 
     try {
+         if (password !== confirmPassword) {
+            return res.status(400).json({ success: false, message: 'Password and confirm password must match.' });
+        }
+
         const defaultRole = 'user';
         const selectedRole = role || defaultRole;
 
-        const registrationDate = new Date();  
+        const registrationDate = new Date();
 
         if (selectedRole === 'user') {
             const nextUserId = await getNextUserId();
@@ -21,8 +25,9 @@ const registerUser = async (req, res) => {
                 name,
                 email,
                 password,
+                confirmPassword, 
                 phoneNumber,
-                registrationDate,  
+                registrationDate,
             });
             await newUser.save();
             res.status(201).json({ success: true, message: 'User registration successful!' });
@@ -33,8 +38,9 @@ const registerUser = async (req, res) => {
                 name,
                 email,
                 password,
+                confirmPassword, 
                 phoneNumber,
-                registrationDate,  
+                registrationDate,
             });
             await newAdmin.save();
             res.status(201).json({ success: true, message: 'Admin registration successful!' });

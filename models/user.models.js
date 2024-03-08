@@ -5,12 +5,13 @@ const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    confirmPassword: { type: String, required: true },
     phoneNumber: { type: String, required: true },
     registrationDate: {
         type: Date,
         default: Date.now,
         get: function () {
-             const date = new Date(this._doc.registrationDate);
+            const date = new Date(this._doc.registrationDate);
             const optionsDate = {
                 day: '2-digit',
                 month: '2-digit',
@@ -30,6 +31,19 @@ const userSchema = new mongoose.Schema({
     },
 });
 
+userSchema.pre('validate', function (next) {
+    if (this.isModified('password') || this.isNew) {
+        if (this.password !== this.confirmPassword) {
+            const err = new Error('Password and confirm password must match.');
+            next(err);
+        } else {
+            next();
+        }
+    } else {
+        next();
+    }
+});
+
 const User = mongoose.model('User', userSchema);
 
 async function getNextUserId() {
@@ -45,7 +59,7 @@ async function getNextUserId() {
         }
         return nextUserId;
     } catch (error) {
-        console.error('Error getting next userId:', error.message);
+        console.error('Error getting the next userId:', error.message);
         throw error;
     }
 }
