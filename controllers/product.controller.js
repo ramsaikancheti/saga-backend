@@ -130,15 +130,16 @@ const getProductsByCategory = async (req, res) => {
     try {
         const categoryId = parseInt(req.params.categoryId);
 
-        const products = await Product.find({ category: categoryId });
+        const products = await Product.find({ 'category.categoryId': categoryId });
 
-       res.json({ products });
+        res.json({ products });
     } 
     catch (error) {
         console.error('Error fetching products:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
 
 const getProducts = async (req, res) => {
     try {
