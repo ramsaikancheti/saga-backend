@@ -71,20 +71,32 @@ const loginUser = async (req, res) => {
         let user;
 
         if (isEmail) {
-             user = await User.findOne({ email: identifier, password });
+            user = await User.findOne({ email: identifier, password });
         } else if (isPhoneNumber) {
-             user = await User.findOne({ phoneNumber: identifier, password });
+            user = await User.findOne({ phoneNumber: identifier, password });
         }
 
         if (!user) {
-             user = await Admin.findOne({ email: identifier, password });
+            user = await Admin.findOne({ email: identifier, password });
         }
 
         if (user) {
-            const userName = user.name;
-            const userRole = user instanceof Admin ? 'admin' : 'user';
+            let userRole;
+            let userName;
+            let userId;
+            let adminId;
 
-            res.status(200).json({ success: true, message: 'Login successful!', name: userName, role: userRole });
+            if (user instanceof Admin) {
+                userRole = 'admin';
+                userName = user.name;
+                adminId = admin.adminId;
+            } else {
+                userRole = 'user';
+                userName = user.name;
+                userId = user.userId;
+            }
+
+            res.status(200).json({ success: true, message: 'Login successful!', name: userName, role: userRole, userId, adminId });
         } else {
             res.status(401).json({ success: false, message: 'Login failed. Please check your credentials.' });
         }
