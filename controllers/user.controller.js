@@ -89,7 +89,7 @@ const loginUser = async (req, res) => {
             if (user instanceof Admin) {
                 userRole = 'admin';
                 userName = user.name;
-                adminId = admin.adminId;
+                adminId = user.adminId;
             } else {
                 userRole = 'user';
                 userName = user.name;
